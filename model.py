@@ -2,17 +2,19 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from tensorflow.keras import layers
 import tensorflow as tf
 
-class ResNet(tf.keras.Model):
 
-    def __init__(self):
+class AGGCN(tf.keras.Model):
+
+    def __init__(self,opt):
         super(ResNet, self).__init__()
-        self.block_1 = ResNetBlock()
-        self.block_2 = ResNetBlock()
-        self.global_pool = layers.GlobalAveragePooling2D()
-        self.classifier = Dense()
+        self.block_MLP = opt['nums_block']
+        self.layers = []
+        for i in range(self.block_MLP):
+            self.layers.append(MLPBlock())
 
     def call(self, inputs):
-        x = self.block_1(inputs)
-        x = self.block_2(x)
-        x = self.global_pool(x)
-        return self.classifier()
+
+        for i in range(self.block_MLP):
+            self.layers[i](inputs)
+
+        return output 
